@@ -1,0 +1,23 @@
+@font-face {
+  font-family: 'Title';
+  src: url('../main-menu/images/light_pixel-7.ttf') format('truetype');
+}
+
+#title2 {
+  text-align: center;
+  font-family: 'Title';
+  font-weight: bold;
+  font-size: 15vh;
+  color: rgb(238, 75, 43);
+  padding-top: 10vh;
+  margin-bottom: 2vh;
+}
+
+#main-menu-button {
+  bottom: 8%;
+  left: 50%; /* Center the button from the left edge */
+  transform: translateX(-50%); /* Shift it back to truly center it */
+}
+
+#main-menu-button:active {
+  transform: translateX(-50%) translateY(5px);}
