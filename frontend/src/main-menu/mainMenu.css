@@ -126,8 +126,9 @@ button {
     position: absolute;
     margin: 0;
     padding: 0;
-    top: -20%;
-    left: -10%;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
     z-index: 5;
 }
 
@@ -181,15 +182,8 @@ button {
     transform: translate(-50%, -50%) translateY(5px) translateX(0);
 }
 
-#leaderboard {
-    position: absolute;
-    margin: 0;
-    padding: 0;
+.cycles_display {
     background-image: url(./assets/tiled_planks.png);
-    bottom: 1%;
-    right: 1%;
-    width: 15%;
-    height: 40%;
     z-index: 10;
     border-color: white;
     border-width: 20px;
@@ -197,11 +191,30 @@ button {
     border: solid;
     color: white;
     font-size: 1.5vw;
-
+}
+.cycles_display h3 {
+    text-align: center;
 }
 
-#leaderboard h3 {
-    text-align: center;
+#personal_stats {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    padding-left: 1%;
+    width: 20%;
+    height: 20%;
+    top: 1%;
+    left: 1%;
+}
+
+#leaderboard {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    bottom: 1%;
+    right: 1%;
+    width: 20%;
+    height: 40%;
 }
 
 .main-menu-sun {

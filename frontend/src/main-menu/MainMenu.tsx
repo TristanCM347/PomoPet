@@ -14,6 +14,9 @@ function InnerHTML({ text }: { text: string }) {
 
 }
 
+const globalAudio = new Audio(pomoPetTheme);
+globalAudio.loop = true;
+
 function Popup({ pageShown }: { pageShown: string }) {
   console.log(pageShown);
 
@@ -37,7 +40,7 @@ function Popup({ pageShown }: { pageShown: string }) {
   }
 }
 
-function LeadeBoard() {
+function LeaderBoard() {
   const [leaderboardData, setLeaderboardData]: any = useState([]);
 
   useEffect(() => {
@@ -59,10 +62,45 @@ function LeadeBoard() {
   }, []);
 
   return (
-    <div id="leaderboard">
+    <div id="leaderboard" className="cycles_display">
       <h3>Leaderboard</h3>
       <ol>
         {leaderboardData.map((item: any, index: any) => (
+          <li key={index}>{item.pomo_cycles} : {item.username}</li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
+
+function PersonalStats() {
+  const [personalStatsData, setPersonalStatsData]: any = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const personalStats = await fetch("http://localhost:3000/personalStats", {
+          method: "GET"
+        });
+
+        const response: { id: String, username: String, pomo_cycles: Number }[] = (await leaderboard.json()).leaderboard;
+        console.log(response);
+        setPersonalStatsData(response);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  return (
+    <div id="personal_stats" className="cycles_display">
+      <h3>Pomodoro Cycles Completed</h3>
+      <p>Total : </p>
+      <ol>
+        {personalStatsData.map((item: any, index: any) => (
           <li key={index}>{item.username}</li>
         ))}
       </ol>
@@ -176,10 +214,6 @@ export default function MainMenu({ setPlaying }: { setPlaying: any }) {
 
   return (
     <div>
-      {/* <audio controls loop id="pomoPetAudio">
-        <source src={pomoPetTheme} type="audio/mpeg" />
-      </audio> */}
-
       <img src={sun} id="main-menu-sun" />
 
       <div className="sky">
@@ -188,7 +222,10 @@ export default function MainMenu({ setPlaying }: { setPlaying: any }) {
 
       <div className="ground"></div>
 
-      {pageShown == "normal" && <LeadeBoard />}
+      {pageShown == "normal" && <LeaderBoard />}
+
+      {pageShown == "normal" && <PersonalStats />}
+
 
       {<Popup pageShown={pageShown}></Popup>}
 
@@ -205,7 +242,7 @@ export default function MainMenu({ setPlaying }: { setPlaying: any }) {
 
       {
         pageShown == "normal" && (
-          <button id="start-studying-button" onClick={() => setPlaying(true)}>
+          <button id="start-studying-button" onClick={() => {globalAudio.pause(); setPlaying(true);}}>
             {" "}
             Start Studying!
           </button>
@@ -214,104 +251,23 @@ export default function MainMenu({ setPlaying }: { setPlaying: any }) {
 
       {<AboutButton pageShown={pageShown} setPageShown={setPageShown} />}
       {<AuthorsButton pageShown={pageShown} setPageShown={setPageShown} />}
-      {/* {
-        pageShown == "normal" && (
-          <button
-            id="authors-button"
-            className="small-button"
-            onClick={() => setPageShown("authors")}
-          >
-            {" "}
-            Authors{" "}
-          </button>
-        )
-      } */}
     </div >
   );
 }
-/*
-class MusicController extends Component {
-    state = {
-        audio: new Audio(pomoPetTheme), // Assume pomoPetTheme is defined
-        isPlaying: false,
-    };
-
-    componentDidMount() {
-        this.state.audio.loop = true;
-    }
-
-    playPause = () => {
-        let { isPlaying, audio } = this.state;
-
-        if (isPlaying) {
-            audio.pause();
-        } else {
-            audio.play();
-        }
-
-        this.setState({ isPlaying: !isPlaying });
-    };
-
-    render() {
-        return (
-            <div>
-                <VolumeButton isPlaying={this.state.isPlaying} playPause={this.playPause} />
-                <button onClick={this.playPause}>Pause/Play Music</button>
-            </div>
-        );
-    }
-}
-*/
-/*
-class VolumeButton extends Component {
-    render() {
-        const { playPause, isPlaying } = this.props;
-
-        return (
-            <div>
-                <div>
-                    <button id="volume-button" className="small-button" onClick={playPause}>
-                        <img src={volume_button} alt="Volume button" />
-                    </button>
-                </div>
-                {!isPlaying && (
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="60"
-                        height="60"
-                        id="volume-button-X"
-                    >
-                        <line x1="0" y1="0" x2="60" y2="60" stroke="black" strokeWidth="5" />
-                        <line x1="0" y1="60" x2="60" y2="0" stroke="black" strokeWidth="5" />
-                    </svg>
-                )}
-            </div>
-        );
-    }
-}
-*/
 
 class VolumeButton extends Component {
     state = {
-        audio: new Audio(pomoPetTheme),
         isPlaying: false,
     };
 
-    componentDidMount() {
-        // Set the audio to loop
-        this.state.audio.loop = true;
-    }
-
     playPause = () => {
-        let isPlaying = this.state.isPlaying;
-
+        const isPlaying = !this.state.isPlaying;
         if (isPlaying) {
-            this.state.audio.pause();
+            globalAudio.play();
         } else {
-            this.state.audio.play();
+            globalAudio.pause();
         }
-
-        this.setState({ isPlaying: !isPlaying });
+        this.setState({ isPlaying });
     };
 
     render() {
